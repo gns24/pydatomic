@@ -198,4 +198,4 @@ if __name__ == '__main__':
     print loads('[\space \\\xE2\x82\xAC [true []] ;true\n[true #inst "2012-09-10T23:39:43.309-00:00" true ""]]')
     print loads(' {true false nil    [true, ()]} {#{nil false} {nil \\newline} }')
     print loads('#{6.22e-18, -3.1415, 1} true #graham #{"pie" "chips"} "work"')
-    print loads('(\\a)')
+    print loads('(\\a .5)')
