@@ -1,7 +1,8 @@
 pydatomic
 =========
 
-Python library for accessing the datomic DBMS.
+Python library for accessing the datomic DBMS via the `REST API <http://docs.datomic.com/rest.html>`_.
+Includes a reader for `edn <http://edn-format.org>`_.
 
 
 edn parser
