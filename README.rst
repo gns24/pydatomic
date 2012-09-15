@@ -16,7 +16,7 @@ Includes a parser for most of EDN (https://github.com/edn-format/edn), featuring
 - All structures are returned as immutable objects except dicts, as Python still lacks a frozendict type.
 - Symbols and keywords are returned as strings (not unicode)
 
-TDB
+TBD
 ~~~
 
 - Encoder!
