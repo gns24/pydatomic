@@ -44,7 +44,8 @@ class Datomic(object):
         return loads(r.content)
 
     def entity(self, dbname, eid):
-        r = requests.get(self.db_url(dbname) + '/entity/' + str(eid))
+        r = requests.get(self.db_url(dbname) + '/-/entity', params={'e':eid},
+                         headers={'Accept':'application/edn'})
         assert r.status_code == 200
         return loads(r.content)
 
@@ -63,5 +64,5 @@ if __name__ == '__main__':
     db.transact('[{:db/id #db/id[:db.part/user] :person/name "Peter"}]')
     r = db.query('[:find ?e ?n :where [?e :person/name ?n]]')
     print r
-    r = db.entity(17592186045421)
+    r = db.entity(r[0][0])
     print r
