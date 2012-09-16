@@ -21,23 +21,25 @@ class Datomic(object):
         self.storage = storage
 
     def db_url(self, dbname):
-        return urljoin(self.location, 'db/') + self.storage + '/' + dbname
+        return urljoin(self.location, 'data/') + self.storage + '/' + dbname
 
     def create_database(self, dbname):
-        r = requests.put(self.db_url(dbname))
-        assert r.status_code in (200, 201)
+        r = requests.post(self.db_url(''), data={'db-name':dbname})
+        assert r.status_code in (200, 201), r.text
         return Database(dbname, self)
 
     def transact(self, dbname, data):
-        r = requests.post(self.db_url(dbname), data=data)
-        assert r.status_code == 200, r.text
+        r = requests.post(self.db_url(dbname)+'/', data={'tx-data':data},
+                          headers={'Accept':'application/edn'})
+        assert r.status_code in (200, 201), (r.status_code, r.text)
         return r
 
     def query(self, dbname, query, history=False):
         history = ' :history true' if history else ''
         r = requests.get(urljoin(self.location, 'api/query'),
                          params={'args' : '[{:db/alias '+self.storage+'/'+dbname+history+'}]',
-                                 'q':query})
+                                 'q':query},
+                         headers={'Accept':'application/edn'})
         assert r.status_code == 200, r.text
         return loads(r.content)
 
