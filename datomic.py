@@ -32,13 +32,15 @@ class Datomic(object):
         r = requests.post(self.db_url(dbname)+'/', data={'tx-data':data},
                           headers={'Accept':'application/edn'})
         assert r.status_code in (200, 201), (r.status_code, r.text)
-        return r
+        return loads(r.content)
 
-    def query(self, dbname, query, history=False):
-        history = ' :history true' if history else ''
+    def query(self, dbname, query, extra_args=[], history=False):
+        args = '[{:db/alias ' + self.storage + '/' + dbname
+        if history:
+            args += ' :history true'
+        args += '} ' + ' '.join(str(a) for a in extra_args) + ']'
         r = requests.get(urljoin(self.location, 'api/query'),
-                         params={'args' : '[{:db/alias '+self.storage+'/'+dbname+history+'}]',
-                                 'q':query},
+                         params={'args' : args, 'q':query},
                          headers={'Accept':'application/edn'})
         assert r.status_code == 200, r.text
         return loads(r.content)
@@ -64,5 +66,6 @@ if __name__ == '__main__':
     db.transact('[{:db/id #db/id[:db.part/user] :person/name "Peter"}]')
     r = db.query('[:find ?e ?n :where [?e :person/name ?n]]')
     print r
-    r = db.entity(r[0][0])
-    print r
+    eid = r[0][0]
+    print db.query('[:find ?n :in $ ?e :where [?e :person/name ?n]]', [eid], history=True)
+    print db.entity(eid)
