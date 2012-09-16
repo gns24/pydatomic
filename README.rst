@@ -4,6 +4,18 @@ pydatomic
 Python library for accessing the datomic DBMS via the `REST API <http://docs.datomic.com/rest.html>`_.
 Includes a reader for `edn <http://edn-format.org>`_.
 
+REST client
+-----------
+
+- Provides methods to create databases, execute transactions and queries, and to query entities.
+- Can request to run queries against the history database
+
+TBD
+~~~
+
+- Support for as-of and since
+- Support for data-structure queries instead of just textual ones (but EDN parser needs updating for that).
+
 
 edn parser
 ----------
