@@ -4,35 +4,42 @@ pydatomic
 Python library for accessing the datomic DBMS via the `REST API <http://docs.datomic.com/rest.html>`_.
 Includes a reader for `edn <http://edn-format.org>`_.
 
+REST client
+-----------
+
+Connections are instances of `datomic.Datomic`:
+
 >>> from datomic import Datomic
->>> q = """[{
+>>> conn = Datomic('http://localhost:3000/', 'tdb')
+
+The method `create_database(name)` returns a database object which can be used for queries. It has the
+same methods as the Datomic connection instance, but you don't pass the database name as the first argument.
+
+>>> db = conn.create_database('cms')
+>>> db.transact("""[{
 ...  :db/id #db/id[:db.part/db]
 ...  :db/ident :person/name
 ...  :db/valueType :db.type/string
 ...  :db/cardinality :db.cardinality/one
 ...  :db/doc "A person's name"
-...  :db.install/_attribute :db.part/db}]"""
-
->>> conn = Datomic('http://localhost:3000/', 'tdb')
->>> db = conn.create_database('cms')
->>> db.transact(q)   #doctest: +ELLIPSIS
+...  :db.install/_attribute :db.part/db}]""")   #doctest: +ELLIPSIS
 {':db-after':...
 >>> db.transact('[{:db/id #db/id[:db.part/user] :person/name "Peter"}]')  #doctest: +ELLIPSIS
 {':db-after':...
+
 >>> r = db.query('[:find ?e ?n :where [?e :person/name ?n]]')
 >>> print r  #doctest: +ELLIPSIS
 ((... u'Peter'))
 >>> eid = r[0][0]
+
+The query function optionally takes arguments to apply to the query and has a keyword argument `history`
+for querying the history database:
+
 >>> print db.query('[:find ?n :in $ ?e :where [?e :person/name ?n]]', [eid], history=True)
 ((u'Peter',),)
 >>> print db.entity(eid)  #doctest: +ELLIPSIS
 {':person/name': u'Peter', ':db/id': ...}
 
-REST client
------------
-
-- Provides methods to create databases, execute transactions and queries, and to query entities.
-- Can request to run queries against the history database
 
 TBD
 ~~~
