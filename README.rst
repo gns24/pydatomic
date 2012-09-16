@@ -38,7 +38,7 @@ TBD
 ~~~
 
 - Support for as-of and since
-- Support for data-structure queries instead of just textual ones (but EDN parser needs updating for that).
+- Support for data-structure queries instead of just textual ones (need to implement an EDN encoder for that).
 
 
 edn parser
@@ -63,7 +63,7 @@ TBD
 - Create a type for symbols and keywords?
 - Better API for adding tag handlers (currently you need to modify the global dictionary!)
 - Map exact floating point values to Decimal type?
-- Don't call tag handlers on the element after a discard
+- Don't call tag handlers whilst parsing the element after a discard
 
 License
 -------
