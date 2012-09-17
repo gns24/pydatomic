@@ -178,7 +178,7 @@ def parser(target, stop=None):
             elif c == '#':
                 target.send(frozenset(l))
             else:
-                assert not len(l)%2
+                assert not len(l)%2, "Map literal must contain an even number of elements"
                 target.send(dict(zip(l[::2], l[1::2]))) # No frozendict yet
         else:
             assert False, c
@@ -189,6 +189,8 @@ def loads(s):
     for c in s:
         target.send(c)
     target.send(' ')
+    if len(l) != 1:
+        raise Exception("Expected exactly one top-level element in edn string")
     return l[0]
 
 # No idea how string excapes are meant to work. We can't support both \n and \newline
@@ -196,6 +198,6 @@ def loads(s):
 if __name__ == '__main__':
     print loads('(:graham/stratton true  \n , "A string with \\"s" true #uuid "f81d4fae7dec11d0a76500a0c91e6bf6")')
     print loads('[\space \\\xE2\x82\xAC [true []] ;true\n[true #inst "2012-09-10T23:39:43.309-00:00" true ""]]')
-    print loads(' {true false nil    [true, ()]} {#{nil false} {nil \\newline} }')
-    print loads('#{6.22e-18, -3.1415, 1} true #graham #{"pie" "chips"} "work"')
+    print loads(' {true false nil    [true, ()] 6 {#{nil false} {nil \\newline} }}')
+    print loads('[#{6.22e-18, -3.1415, 1} true #graham #{"pie" "chips"} "work"]')
     print loads('(\\a .5)')
