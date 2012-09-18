@@ -48,17 +48,19 @@ def inst_handler(time_string):
     return datetime.strptime(time_string[:23], '%Y-%m-%dT%H:%M:%S.%f')
 
 tag_handlers = {'inst':inst_handler,
-                'uuid':UUID}
+                'uuid':UUID,
+                'db/fn':lambda x:x}
 
 @coroutine
 def tag_handler(tag_name):
     while True:
         c = (yield)
-        if c in STOP_CHARS:
+        if c in STOP_CHARS+'{"[(\\#':
             break
         tag_name += c
     elements = []
     handler = parser(appender(elements))
+    handler.send(c)
     while not elements:
         handler.send((yield))
     if tag_name in tag_handlers:
@@ -178,10 +180,11 @@ def parser(target, stop=None):
             elif c == '#':
                 target.send(frozenset(l))
             else:
-                assert not len(l)%2, "Map literal must contain an even number of elements"
+                if len(l)%2:
+                    raise Exception("Map literal must contain an even number of elements")
                 target.send(dict(zip(l[::2], l[1::2]))) # No frozendict yet
         else:
-            assert False, c
+            raise ValueError("Unexpected character in edn", c)
 
 def loads(s):
     l = []
@@ -190,7 +193,7 @@ def loads(s):
         target.send(c)
     target.send(' ')
     if len(l) != 1:
-        raise Exception("Expected exactly one top-level element in edn string")
+        raise ValueError("Expected exactly one top-level element in edn string", s)
     return l[0]
 
 # No idea how string excapes are meant to work. We can't support both \n and \newline

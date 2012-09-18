@@ -29,6 +29,7 @@ class EdnParseTest(unittest.TestCase):
                                                         ":b":frozenset([23.1, 43.1, 33.1])},
                      "{:a 1 :b [32 32 43] :c 4}": {":a":1, ":b":(32,32,43), ":c":4},
                      "\\你": u"你",
+                     '#db/fn{:lang "clojure" :code "(map l)"}': {':lang':u'clojure', ':code':u'(map l)'},
                      "#_ {[#{}] #{[]}} [23[34][32][4]]": (23, (34,), (32,), (4,))}
 
     def test_all_data(self):
@@ -36,8 +37,8 @@ class EdnParseTest(unittest.TestCase):
             self.assertEqual(edn.loads(k), v)
 
             
-    def dont_test_misformed_data(self):
-        data = ["[1 2 3", "til", "falSe", "nik", "@EE", "[@nil tee]"]
+    def test_misformed_data(self):
+        data = ["[1 2 3", "@EE", "[@nil tee]"]
         for d in data:
             self.assertRaises(ValueError, edn.loads, d)
 
