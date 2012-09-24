@@ -10,7 +10,7 @@ class Database(object):
         self.name = name
         self.conn = conn
 
-    def __getattr__(self, name  ):
+    def __getattr__(self, name):
         def f(*args, **kwargs):
             return getattr(self.conn, name)(self.name, *args, **kwargs)
         return f
@@ -29,6 +29,7 @@ class Datomic(object):
         return Database(dbname, self)
 
     def transact(self, dbname, data):
+        data = '[%s\n]' % '\n'.join(data)
         r = requests.post(self.db_url(dbname)+'/', data={'tx-data':data},
                           headers={'Accept':'application/edn'})
         assert r.status_code in (200, 201), (r.status_code, r.text)

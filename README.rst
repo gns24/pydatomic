@@ -16,15 +16,15 @@ The method `create_database(name)` returns a database object which can be used f
 same methods as the Datomic connection instance, but you don't pass the database name as the first argument.
 
 >>> db = conn.create_database('cms')
->>> db.transact("""[{
+>>> db.transact(["""{
 ...  :db/id #db/id[:db.part/db]
 ...  :db/ident :person/name
 ...  :db/valueType :db.type/string
 ...  :db/cardinality :db.cardinality/one
 ...  :db/doc "A person's name"
-...  :db.install/_attribute :db.part/db}]""")   #doctest: +ELLIPSIS
+...  :db.install/_attribute :db.part/db}"""])   #doctest: +ELLIPSIS
 {':db-after':...
->>> db.transact('[{:db/id #db/id[:db.part/user] :person/name "Peter"}]')  #doctest: +ELLIPSIS
+>>> db.transact(['{:db/id #db/id[:db.part/user] :person/name "Peter"}'])  #doctest: +ELLIPSIS
 {':db-after':...
 
 >>> r = db.query('[:find ?e ?n :where [?e :person/name ?n]]')
@@ -46,7 +46,6 @@ TBD
 
 - Support for as-of and since
 - Support for data-structure queries instead of just textual ones (need to implement an EDN encoder for that).
-
 
 edn parser
 ----------
