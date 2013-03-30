@@ -57,18 +57,13 @@ def tag_handler(tag_name):
 @coroutine
 def character_handler():
     r = (yield)
-    bits = ord(r) // 16
-    if bits >= 8:
-        extra_bytes_in_char = {15:3, 14:2, 12:1}[bits]
-        for i in range(extra_bytes_in_char):
-            r += (yield)
     while 1:
         c = (yield)
         if not c.isalpha():
-            if len(r.decode('utf-8')) == 1:
-                yield r.decode('utf-8'), False
+            if len(r) == 1:
+                yield r, False
             else:
-                yield {'newline':u'\n', 'space':u' ', 'tab':u'\t'}[r], False
+                yield {'newline':'\n', 'space':' ', 'tab':'\t'}[r], False
         r += c
 
 def parse_number(s):
@@ -130,7 +125,7 @@ def parser(target, stop=None):
                 if char == '\\':
                     chars.append((yield))
                 elif char == '"':
-                    target.send(''.join(chars).decode('utf-8'))
+                    target.send(''.join(chars))
                     break
                 else:
                     chars.append(char)
@@ -174,18 +169,16 @@ def parser(target, stop=None):
 def loads(s):
     l = []
     target = parser(appender(l))
-    for c in s:
+    for c in s.decode('utf-8'):
         target.send(c)
     target.send(' ')
     if len(l) != 1:
         raise ValueError("Expected exactly one top-level element in edn string", s)
     return l[0]
 
-# No idea how string excapes are meant to work. We can't support both \n and \newline
-# Also is a char 1 byte or one utf-8 encoded character?
 if __name__ == '__main__':
-    print loads('(:graham/stratton true  \n , "A string with \\"s" true #uuid "f81d4fae7dec11d0a76500a0c91e6bf6")')
-    print loads('[\space \\\xE2\x82\xAC [true []] ;true\n[true #inst "2012-09-10T23:39:43.309-00:00" true ""]]')
-    print loads(' {true false nil    [true, ()] 6 {#{nil false} {nil \\newline} }}')
-    print loads('[#{6.22e-18, -3.1415, 1} true #graham #{"pie" "chips"} "work"]')
-    print loads('(\\a .5)')
+    print loads(b'(:graham/stratton true  \n , "A string with \\"s" true #uuid "f81d4fae7dec11d0a76500a0c91e6bf6")')
+    print loads(b'[\space \\\xE2\x82\xAC [true []] ;true\n[true #inst "2012-09-10T23:39:43.309-00:00" true ""]]')
+    print loads(b' {true false nil    [true, ()] 6 {#{nil false} {nil \\newline} }}')
+    print loads(b'[#{6.22e-18, -3.1415, 1} true #graham #{"pie" "chips"} "work"]')
+    print loads(b'(\\a .5)')
