@@ -19,8 +19,8 @@ def Attribute(ident, valueType, doc=None, cardinality=ONE, unique=None,
     parts.append(":db/unique %s" % {IDENTITY:IDENTITY, VALUE:VALUE,
                                    None:'nil'}[unique])
     parts.append(":db/index %s" % {False:'false', True:'true'}[index])
-    parts.append(":db/fulltext %s" % {False:'false', True:'true'}[index])
-    parts.append(":db/noHistory %s" % {False:'false', True:'true'}[index])
+    parts.append(":db/fulltext %s" % {False:'false', True:'true'}[fulltext])
+    parts.append(":db/noHistory %s" % {False:'false', True:'true'}[noHistory])
     return '{%s}' % ('\n '.join(parts))
 
 def Schema(*attributes):
