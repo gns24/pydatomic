@@ -71,6 +71,16 @@ TBD
 - Map exact floating point values to Decimal type?
 - Don't call tag handlers whilst parsing the element after a discard
 
+For Developers
+--------------
+
+Before push your PR, please run the test:
+
+ $ make prepare-venv
+
+ $ make test
+
+
 License
 -------
 
