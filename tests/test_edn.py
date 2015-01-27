@@ -37,7 +37,6 @@ class EdnParseTest(unittest.TestCase):
         for k,v in self.data.items():
             self.assertEqual(edn.loads(k), v)
 
-            
     def test_misformed_data(self):
         data = ["[1 2 3", "@EE", "[@nil tee]"]
         for d in data:
