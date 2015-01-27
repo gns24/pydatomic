@@ -173,7 +173,12 @@ def parser(target, stop=None):
             if c in '[(':
                 target.send(tuple(l))
             elif c == '#':
-                target.send(frozenset(l))
+
+                not_hashable = any(isinstance(each, (dict, list, set)) for each in l)
+                if not_hashable:
+                    target.send(tuple(l))
+                else:
+                    target.send(frozenset(l))
             else:
                 if len(l) % 2:
                     raise Exception("Map literal must contain an even number of elements")
