@@ -3,14 +3,12 @@ try:
 except ImportError:
     from distutils.core import setup
 
-long_desc=open('README.rst').read()
-
 setup(name="pydatomic",
       version="0.1.0",
       author="Graham Stratton",
       author_email="gns24@beasts.org",
       description="Datomic REST API client",
-      long_description=long_desc,
+      long_description="Datomic REST API client",
       url="https://github.com/gns24/pydatomic",
       install_requires=['requests'],
       license='mit',
