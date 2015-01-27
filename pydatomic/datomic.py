@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import httplib
 import urllib
-from urlparse import urljoin
-from edn import loads
 import requests
+from urlparse import urljoin
+from pydatomic.edn import loads
+
 
 class Database(object):
     def __init__(self, name, conn):

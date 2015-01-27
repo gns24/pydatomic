@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import unittest
-import edn
 from datetime import datetime
+from pydatomic import edn
+
 
 class EdnParseTest(unittest.TestCase):
     def setUp(self):
@@ -45,5 +46,3 @@ class EdnParseTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()            
-
-
