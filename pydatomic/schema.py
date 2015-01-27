@@ -31,4 +31,4 @@ if __name__ == '__main__':
                 Attribute(':task/closed', BOOLEAN),
                 Attribute(':data/user', STRING))
     for a in schema:
-        print a
+        print(a)

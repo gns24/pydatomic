@@ -9,7 +9,7 @@ REST client
 
 Connections are instances of `datomic.Datomic`:
 
->>> from datomic import Datomic
+>>> from pydatomic.datomic import Datomic
 >>> conn = Datomic('http://localhost:3000/', 'tdb')
 
 The method `create_database(name)` returns a database object which can be used for queries. It has the

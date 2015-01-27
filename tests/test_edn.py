@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import unittest
-import edn
 from datetime import datetime
+from pydatomic import edn
+
 
 class EdnParseTest(unittest.TestCase):
     def setUp(self):
@@ -36,7 +37,6 @@ class EdnParseTest(unittest.TestCase):
         for k,v in self.data.items():
             self.assertEqual(edn.loads(k), v)
 
-            
     def test_misformed_data(self):
         data = ["[1 2 3", "@EE", "[@nil tee]"]
         for d in data:
@@ -45,5 +45,3 @@ class EdnParseTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()            
-
-

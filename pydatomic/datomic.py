@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import httplib
-import urllib
-from urlparse import urljoin
-from edn import loads
 import requests
+from urlparse import urljoin
+from pydatomic.edn import loads
+
 
 class Database(object):
     def __init__(self, name, conn):
@@ -41,7 +40,7 @@ class Datomic(object):
             args += ' :history true'
         args += '} ' + ' '.join(str(a) for a in extra_args) + ']'
         r = requests.get(urljoin(self.location, 'api/query'),
-                         params={'args' : args, 'q':query},
+                         params={'args': args, 'q':query},
                          headers={'Accept':'application/edn'})
         assert r.status_code == 200, r.text
         return loads(r.content)
@@ -66,7 +65,7 @@ if __name__ == '__main__':
     db.transact(q)
     db.transact('[{:db/id #db/id[:db.part/user] :person/name "Peter"}]')
     r = db.query('[:find ?e ?n :where [?e :person/name ?n]]')
-    print r
+    print(r)
     eid = r[0][0]
-    print db.query('[:find ?n :in $ ?e :where [?e :person/name ?n]]', [eid], history=True)
-    print db.entity(eid)
+    print(db.query('[:find ?n :in $ ?e :where [?e :person/name ?n]]', [eid], history=True))
+    print(db.entity(eid))
